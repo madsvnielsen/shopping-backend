@@ -6,3 +6,4 @@ A backend for a shopping website
 * Express 🌐
 * Sequelize 🧩
 * mySql db 🎁
+* Apache web server

@@ -14,15 +14,15 @@ A backend for a shopping website
 
 ## How to run
 Ensure you have all dependencies installed with.
-`` bash
+```bash
 npm install
-``
+```
 
 For development
-``bash
+```bash
 npm run dev
-``
+```
 Build to JavaScript
-``bash
+```bash
 npm run build
-``
+```

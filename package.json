@@ -14,7 +14,6 @@
   "dependencies": {
     "@types/swagger-ui-express": "^4.1.6",
     "express": "^4.17.1",
-    "install": "^0.13.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0"
   },

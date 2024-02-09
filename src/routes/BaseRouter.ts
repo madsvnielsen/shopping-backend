@@ -13,8 +13,8 @@ baseRouter.get('/test/', (req : Request, res : Response) =>{
 });
 
 
-baseRouter.get('/card/', (req : Request, res : Response) =>{
-    PokemonAPI.getPokemonCard('xy1-1').then((result : Card) => {
+baseRouter.get('/card/:id', (req : Request<{id : string}>, res : Response) =>{
+    PokemonAPI.getPokemonCard(req.params.id).then((result : Card) => {
         res.send(result);
     })
 });

@@ -1,17 +1,14 @@
 import express, { Express, Request, Response } from "express";
+import swaggerUi from "swagger-ui-express";
+import * as swaggerDocument from './ApiDocs/swagger.json';
+import {baseRouter} from "./routes/BaseRouter";
 
 
 const app : Express = express();
 
-let a : Number  = 2
-let b : string = "2"
 
-app.listen(3000, () => console.log('Example app is listening on port 3000.'));
-app.get('/', (req : Request, res : Response) => {
-  res.send('Successful response!!');
-});
+app.listen(3000, () => console.log('Shopping backend is listening on port 3000.'));
 
 
-app.get('/test', (req : Request, res : Response) => {
-    res.send("<h1>Hej</h1>")
-})
+app.use("/", baseRouter)
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

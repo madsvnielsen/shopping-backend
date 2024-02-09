@@ -6,5 +6,6 @@ export const baseRouter = express.Router();
 
 
 baseRouter.get('/test/', (req : Request, res : Response) =>{
-    res.send("hej");
+    console.log("KEY: " + process.env.API_KEY)
+    res.send(process.env.API_KEY);
 });

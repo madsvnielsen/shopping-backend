@@ -5,8 +5,8 @@
   "main": "src/server.ts",
   "scripts": {
     "build": "npx ts-node src/ApiDocs/swagger.ts && npx tsc",
-    "start": "npx ts-node src/ApiDocs/swagger.ts && node out/server.js",
-    "dev": "npx ts-node src/ApiDocs/swagger.ts && nodemon src/server.ts"
+    "start": "npx ts-node src/ApiDocs/swagger.ts && node --env-file=.env out/server.js",
+    "dev": "npx ts-node src/ApiDocs/swagger.ts && nodemon src/server.ts "
   },
   "keywords": [],
   "author": "",
@@ -23,5 +23,6 @@
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
-  }
+}
+
 }

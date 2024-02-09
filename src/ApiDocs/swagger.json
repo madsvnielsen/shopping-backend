@@ -27,31 +27,8 @@
         }
       }
     },
-    "/products/list": {
+    "/card/{id}": {
       "get": {
-        "summary": "List cards",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/products/search": {
-      "get": {
-        "summary": "Search cards from string",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/products/{id}": {
-      "get": {
-        "summary": "Get card details",
         "description": "",
         "parameters": [
           {
@@ -61,67 +38,6 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/basket/": {
-      "post": {
-        "summary": "Add item to basket",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete basket",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/basket/{item_id}": {
-      "delete": {
-        "summary": "Remove item from basket",
-        "description": "",
-        "parameters": [
-          {
-            "name": "item_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/basket/order": {
-      "post": {
-        "summary": "Place order",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/basket/order/receipt": {
-      "get": {
-        "summary": "Get receipt basket",
-        "description": "Maybe this should be post idk?",
         "responses": {
           "200": {
             "description": "OK"

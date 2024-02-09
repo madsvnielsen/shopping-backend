@@ -29,6 +29,9 @@
     },
     "/products/list": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "List cards",
         "description": "",
         "responses": {
@@ -40,6 +43,9 @@
     },
     "/products/search": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "Search cards from string",
         "description": "",
         "responses": {
@@ -51,6 +57,9 @@
     },
     "/products/{id}": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "Get card details",
         "description": "",
         "parameters": [
@@ -70,6 +79,9 @@
     },
     "/basket/": {
       "post": {
+        "tags": [
+          "Basket"
+        ],
         "summary": "Add item to basket",
         "description": "",
         "responses": {
@@ -79,6 +91,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Basket"
+        ],
         "summary": "Delete basket",
         "description": "",
         "responses": {
@@ -90,6 +105,9 @@
     },
     "/basket/{item_id}": {
       "delete": {
+        "tags": [
+          "Basket"
+        ],
         "summary": "Remove item from basket",
         "description": "",
         "parameters": [
@@ -109,6 +127,9 @@
     },
     "/basket/order": {
       "post": {
+        "tags": [
+          "Basket"
+        ],
         "summary": "Place order",
         "description": "",
         "responses": {
@@ -120,6 +141,9 @@
     },
     "/basket/order/receipt": {
       "get": {
+        "tags": [
+          "Basket"
+        ],
         "summary": "Get receipt basket",
         "description": "Maybe this should be post idk?",
         "responses": {

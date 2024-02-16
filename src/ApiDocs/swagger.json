@@ -17,6 +17,20 @@
     "http"
   ],
   "paths": {
+    "/dbtest": {
+      "get": {
+        "tags": [
+          "Test"
+        ],
+        "summary": "Test db autohentication",
+        "description": "Shows if the db is authentication",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/test/": {
       "get": {
         "description": "",
@@ -43,9 +57,6 @@
     },
     "/products/search/{query}": {
       "get": {
-        "tags": [
-          "Products"
-        ],
         "summary": "Search cards from string",
         "description": "",
         "parameters": [

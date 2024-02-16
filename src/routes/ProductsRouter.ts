@@ -6,7 +6,8 @@ import {Card} from "../Models/CardModel";
 productsRouter.get("/list", (req : Request, res : Response) => {
     // #swagger.summary = 'List cards'
     // #swagger.tags = ["Products"]
-    // TODO:
+
+    // TODO: Should it return all cards, just the pictures some descriptory information etc?
     return res.send("Not yet implemented")
 })
 

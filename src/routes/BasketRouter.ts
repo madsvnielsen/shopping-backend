@@ -1,15 +1,21 @@
 import express, { Express, Request, Response } from "express";
+import session from "express-session";
 
 export const basketRouter = express.Router();
+export const sessionManager = express();
 
+basketRouter.use(session({ //session settings
+    secret: "bishString",
+    resave: false,
+    saveUninitialized: true
+}));
 
-
-basketRouter.post("/", (req : Request, res : Response) => {
+basketRouter.post("/add", (req : Request, res : Response) => {
+    const sessionId = req.sessionID; //Unique identifier,
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
     // TODO:
-    return res.send("Not yet implemented")
-
+    return res.send({sessionId})
 })
 
 

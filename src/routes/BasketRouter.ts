@@ -4,18 +4,32 @@ import session from "express-session";
 export const basketRouter = express.Router();
 export const sessionManager = express();
 
+const basketStorage : {[key: string]: any[]} = {};
+
+basketRouter.use(express.json());
+basketRouter.use(express.urlencoded({extended: false}));
+
 basketRouter.use(session({ //session settings
     secret: "bishString",
     resave: false,
     saveUninitialized: true
 }));
 
-basketRouter.post("/add", (req : Request, res : Response) => {
+basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
     const sessionId = req.sessionID; //Unique identifier,
+    console.log(req.body)
+    const item = req.body.itemId;
+
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
+    let basket = basketStorage[sessionId];
+    if (!basket){
+        basket = [];
+        basketStorage[sessionId] = basket;
+    }
+    basket.push(item);
     // TODO:
-    return res.send({sessionId})
+    return res.send({sessionId, basket})
 })
 
 
@@ -46,8 +60,16 @@ basketRouter.get("/order/receipt", (req : Request, res : Response) => {
 
     // #swagger.summary = 'Get receipt  basket'
     // #swagger.tags = ["Basket"]
-    // #swagger.description = 'Maybe this should be post idk?'
+    // #swagger.description = 'Maybe this should be post idk?' IS THIS FOR RETRIEVING ThE BASKET?????!??!?!?!
 
-    // TODO:
-    return res.send("Not yet implemented")
+
+    const sessionId = req.sessionID;
+    let basket = basketStorage[sessionId];
+    if (!basket){
+        basket = [];
+        basketStorage[sessionId] = basket;
+    }
+    return res.send(basket)
 })
+
+

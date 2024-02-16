@@ -5,6 +5,7 @@ import {Card} from "../Models/CardModel";
 
 productsRouter.get("/list", (req : Request, res : Response) => {
     // #swagger.summary = 'List cards'
+    // #swagger.tags = ["Products"]
     // TODO:
     return res.send("Not yet implemented")
 })
@@ -16,12 +17,10 @@ productsRouter.get("/search/:query", (req : Request<{query : string}>, res : Res
     })
 })
 
-
-    productsRouter.get("/:id", (req: Request<{ id: string }>, res: Response) => {
-        // #swagger.summary = 'Get card details'
-        PokemonAPI.getPokemonCard(req.params.id).then((card: Card) => {
-            res.send(card);
-        })
+productsRouter.get("/:id", (req : Request<{id : string}>, res : Response) => {
+    // #swagger.summary = 'Get card details'
+    // #swagger.tags = ["Products"]
+    PokemonAPI.getPokemonCard(req.params.id).then((result : Card) => {
+        res.send(result);
     })
-
-
+})

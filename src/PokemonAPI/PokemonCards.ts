@@ -1,5 +1,6 @@
 import {Card} from "../Models/CardModel"
 
+
 export class PokemonAPI{
     static readonly apiURL : string = "https://api.pokemontcg.io/v2";
     static readonly token : string = process.env.API_KEY as string;
@@ -25,4 +26,26 @@ export class PokemonAPI{
 
         }
     };
+
+    static async searchPokemonCard(se: string) : Promise<Array<Card>> {
+        try {
+            const response = await fetch(
+                PokemonAPI.apiURL + '/cards?q=name:' + se+"*&page=1&pageSize=3",
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + PokemonAPI.token,
+                    }
+                }
+            );
+            const json = await response.json();
+            console.log(json);
+            return json.data
+        } catch (error) {
+            return Promise.reject("Couldn't get Card")
+
+        }
+    }
 }

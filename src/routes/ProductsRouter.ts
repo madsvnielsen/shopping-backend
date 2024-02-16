@@ -9,15 +9,19 @@ productsRouter.get("/list", (req : Request, res : Response) => {
     return res.send("Not yet implemented")
 })
 
-productsRouter.get("/search", (req : Request<{query : string}>, res : Response) => {
+productsRouter.get("/search/:query", (req : Request<{query : string}>, res : Response) => {
     // #swagger.summary = 'Search cards from string'
-    // TODO:
-    return res.send("Not yet implemented")
-})
-
-productsRouter.get("/:id", (req : Request<{id : string}>, res : Response) => {
-    // #swagger.summary = 'Get card details'
-    PokemonAPI.getPokemonCard(req.params.id).then((result : Card) => {
-        res.send(result);
+    PokemonAPI.searchPokemonCard(req.params.query).then((cards: Array<Card>) => {console.log(cards)
+        res.send(cards);
     })
 })
+
+
+    productsRouter.get("/:id", (req: Request<{ id: string }>, res: Response) => {
+        // #swagger.summary = 'Get card details'
+        PokemonAPI.getPokemonCard(req.params.id).then((card: Card) => {
+            res.send(card);
+        })
+    })
+
+

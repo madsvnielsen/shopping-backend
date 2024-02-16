@@ -38,10 +38,18 @@
         }
       }
     },
-    "/products/search": {
+    "/products/search/{query}": {
       "get": {
         "summary": "Search cards from string",
         "description": "",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

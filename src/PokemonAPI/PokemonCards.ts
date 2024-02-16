@@ -48,4 +48,26 @@ export class PokemonAPI{
 
         }
     }
+
+    static async listOfCards(se: string) : Promise<Array<Card>> {
+        try {
+            const response = await fetch(
+                PokemonAPI.apiURL + '/cards?page=1&pageSize=3',
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + PokemonAPI.token,
+                    }
+                }
+            );
+            const json = await response.json();
+            console.log(json);
+            return json.data
+        } catch (error) {
+            return Promise.reject("Couldn't get Card")
+
+        }
+    }
 }

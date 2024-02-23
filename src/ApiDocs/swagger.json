@@ -96,25 +96,27 @@
         }
       }
     },
-    "/basket/": {
+    "/basket/add": {
       "post": {
         "tags": [
           "Basket"
         ],
         "summary": "Add item to basket",
         "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "example": "any"
+                }
+              }
+            }
           }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Basket"
         ],
-        "summary": "Delete basket",
-        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -137,6 +139,20 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/basket/": {
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Delete basket",
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"

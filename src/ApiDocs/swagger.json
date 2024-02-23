@@ -22,7 +22,7 @@
         "tags": [
           "Test"
         ],
-        "summary": "Test db autohentication",
+        "summary": "Test db authentication",
         "description": "Shows if the db is authentication",
         "responses": {
           "200": {

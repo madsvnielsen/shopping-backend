@@ -16,7 +16,7 @@ A backend for a shopping website
 
 Create a database that is supported by [Sequelize](https://sequelize.org/docs/v6/getting-started/).
 
-Set up the environment as explained in the section [how to set up the environment](#environtment-setup)
+Set up the environment as explained in the section [how to set up the environment](#environment-setup)
 
 
 Ensure you have all dependencies installed with.

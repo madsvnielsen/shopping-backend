@@ -1,8 +1,14 @@
 import express, { Express, Request, Response } from "express";
 import session from "express-session";
+import {Order} from "../Models/DataModels/OrderModel";
+import {PokemonAPI} from "../PokemonAPI/PokemonCards";
+import {Card} from "../Models/CardModel";
+import crypto from "crypto"
 
 export const basketRouter = express.Router();
 export const sessionManager = express();
+
+
 
 const basketStorage : {[key: string]: any[]} = {};
 
@@ -14,6 +20,22 @@ basketRouter.use(session({ //session settings
     resave: false,
     saveUninitialized: true
 }));
+
+
+
+
+basketRouter.get("/", (req : Request, res : Response) => {
+    // #swagger.summary = 'Get basket'
+    // #swagger.tags = ["Basket"]
+    const sessionId = req.sessionID; //Unique identifier,
+    const item = req.body.itemId;
+    let basket = basketStorage[sessionId];
+    if (!basket){
+        basket = [];
+        basketStorage[sessionId] = basket;
+    }
+    return res.send({"basket": basket})
+})
 
 basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
     console.log("add");
@@ -74,11 +96,46 @@ basketRouter.delete("/", (req : Request, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.post("/order", (req : Request, res : Response) => {
+basketRouter.post("/order", (req : Request<{firstName : string, lastName : string}>, res : Response) => {
     // #swagger.summary = 'Place order'
     // #swagger.tags = ["Basket"]
     // TODO:
-    return res.send("Not yet implemented")
+    const sessionId = req.sessionID
+    let basket = basketStorage[sessionId];
+    if (!basket){
+        basket = [];
+        basketStorage[sessionId] = basket;
+    }
+
+    if(basket.length == 0){
+        return res.send("Basket is empty!")
+    }
+
+        PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then((cards : Array<Card>) => {
+
+        let totalPrice = 0;
+        cards.forEach((card : Card) => {
+            totalPrice += card.cardmarket.prices.averageSellPrice
+
+        })
+
+
+        Order.create({firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            orderNumber: crypto.randomUUID(),
+            itemIds: basket,
+            totalPrice: totalPrice
+        });
+
+
+        basketStorage[sessionId] = []
+
+    })
+
+
+
+
+    return res.send("Created order")
 })
 
 basketRouter.get("/order/receipt", (req : Request, res : Response) => {
@@ -96,5 +153,3 @@ basketRouter.get("/order/receipt", (req : Request, res : Response) => {
     }
     return res.send(basket)
 })
-
-

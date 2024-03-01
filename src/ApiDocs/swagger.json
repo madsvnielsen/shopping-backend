@@ -96,6 +96,32 @@
         }
       }
     },
+    "/basket/": {
+      "get": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Get basket",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Delete basket",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/basket/add": {
       "post": {
         "tags": [
@@ -146,20 +172,6 @@
         }
       }
     },
-    "/basket/": {
-      "delete": {
-        "tags": [
-          "Basket"
-        ],
-        "summary": "Delete basket",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/basket/order": {
       "post": {
         "tags": [
@@ -167,6 +179,23 @@
         ],
         "summary": "Place order",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

@@ -49,7 +49,7 @@ export class PokemonAPI{
         }
     }
 
-    static async listOfCards(se: string) : Promise<Array<Card>> {
+    static async listOfCards() : Promise<Array<Card>> {
         try {
             const response = await fetch(
                 PokemonAPI.apiURL + '/cards?page=1&pageSize=3',

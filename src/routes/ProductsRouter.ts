@@ -6,7 +6,7 @@ import {Card} from "../Models/CardModel";
 productsRouter.get("/list", (req : Request, res : Response) => {
     // #swagger.summary = 'List cards'
     // #swagger.tags = ["Products"]
-    PokemonAPI.listOfCards(req.params.query).then((cards: Array<Card>) => {
+    PokemonAPI.listOfCards().then((cards: Array<Card>) => {
         console.log(cards)
         res.send(cards);
     })

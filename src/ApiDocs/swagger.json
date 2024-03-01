@@ -43,6 +43,9 @@
     },
     "/products/search/{query}": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "Search cards from string",
         "description": "",
         "parameters": [

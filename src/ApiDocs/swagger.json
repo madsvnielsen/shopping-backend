@@ -5,13 +5,7 @@
     "title": "Shopping backend",
     "description": "Backend for a web shop"
   },
-  "host": "localhost:3000",
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": ""
-    }
-  ],
+  "host": "localhost:5000",
   "basePath": "/",
   "schemes": [
     "http"

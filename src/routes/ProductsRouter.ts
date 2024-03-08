@@ -6,13 +6,15 @@ import {Card} from "../Models/CardModel";
 productsRouter.get("/list", (req : Request, res : Response) => {
     // #swagger.summary = 'List cards'
     // #swagger.tags = ["Products"]
-
-    // TODO: Should it return all cards, just the pictures some descriptory information etc?
-    return res.send("Not yet implemented")
+    PokemonAPI.listOfCards().then((cards: Array<Card>) => {
+        console.log(cards)
+        res.send(cards);
+    })
 })
 
 productsRouter.get("/search/:query", (req : Request<{query : string}>, res : Response) => {
     // #swagger.summary = 'Search cards from string'
+    // #swagger.tags = ["Products"]
     PokemonAPI.searchPokemonCard(req.params.query).then((cards: Array<Card>) => {console.log(cards)
         res.send(cards);
     })

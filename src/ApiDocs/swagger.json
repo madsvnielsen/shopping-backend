@@ -5,7 +5,7 @@
     "title": "Shopping backend",
     "description": "Backend for a web shop"
   },
-  "host": "localhost:5000",
+  "host": "130.225.170.52:10261/api",
   "basePath": "/",
   "schemes": [
     "http"

@@ -1,10 +1,8 @@
 import swaggerAutogen from 'swagger-autogen';
 
-let host = "localhost:5000"
+let dev = true;
+let host = dev ? "localhost:3000" : "130.225.170.52:10261/api"
 
-if(process.env.SWAGGER_HOST != undefined){
-    host = process.env.SWAGGER_HOST as string
-}
 
 const doc = {
     info: {

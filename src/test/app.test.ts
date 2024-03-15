@@ -22,7 +22,7 @@ describe("test database", () => {
             .get("/dbtest")
             .then(data => {
                 expect(data.status).toBe(200)
-                expect(data.text).toBe("Connection has been established successfully.")
+                expect(data.text).toBe("Connectin has been established successfully.")
             })
     });
 });

@@ -9,11 +9,11 @@ on:
   pull_request:
     branches: [ "main" ]
 env: 
-  API_KEY : 'x'
-  DB_HOST: 'localhost'
-  DB_NAME: 'shoppingdb'
-  DB_USER: 'dev'
-  DB_PASSWORD: 'somepassword'
+  API_KEY : ${{ secrets.api_key }}
+  DB_HOST: ${{ secrets.db_host }}
+  DB_NAME: ${{ secrets.db_name }}
+  DB_USER: ${{ secrets.db_user }}
+  DB_PASSWORD: ${{ secrets.db_password }}
   DB_DIALECT: 'mariadb'
 jobs:
   build:

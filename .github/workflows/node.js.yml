@@ -8,11 +8,18 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+env: 
+  API_KEY : 'x'
+  DB_HOST: 'localhost'
+  DB_NAME: 'shoppingdb'
+  DB_USER: 'dev'
+  DB_PASSWORD: 'somepassword'
+  DB_DIALECT: 'mariadb'
 jobs:
   build:
-
+   
     runs-on: ubuntu-latest
+    
 
     strategy:
       matrix:
@@ -26,6 +33,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - uses: getong/mariadb-action@v1.1
+      with:
+        mysql database: 'shoppingdb' # Optional, default value is "test". The specified database which will be create
+        mysql user: 'dev' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql password: "somepassword"
+        
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test

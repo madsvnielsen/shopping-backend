@@ -10,15 +10,20 @@ on:
     branches: [ "main" ]
 env: 
   API_KEY : 'x'
-  DB_HOST: 'x'
-  DB_NAME: 'x'
-  DB_USER: 'x'
-  DB_PASSWORD: 'x'
+  DB_HOST: 'localhost:32574'
+  DB_NAME: 'shoppingdb'
+  DB_USER: 'root'
+  DB_PASSWORD: 'password'
   DB_DIALECT: 'mariadb'
 jobs:
   build:
-
+    services:
+        mariadb:
+          image: mariadb:15.1
+        ports:
+          32574:3306
     runs-on: ubuntu-latest
+    
 
     strategy:
       matrix:

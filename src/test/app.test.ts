@@ -16,6 +16,17 @@ describe("get /test", () => {
     });
 });
 
+describe("test database", () => {
+    test("should say connected successfully", async () => {
+        return request(app)
+            .get("/dbtest")
+            .then(data => {
+                expect(data.status).toBe(200)
+                expect(data.text).toBe("Connection has been established successfully.")
+            })
+    });
+});
+
 afterAll(() => {
     server.close()
 })

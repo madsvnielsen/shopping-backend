@@ -52,13 +52,14 @@ export class PokemonAPI{
     static async listOfCards() : Promise<Array<Card>> {
         try {
             const response = await fetch(
-                PokemonAPI.apiURL + '/cards?page=1&pageSize=3',
+                PokemonAPI.apiURL + '/cards?page=1&pageSize=27',
                 {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
                         Authorization: 'Bearer ' + PokemonAPI.token,
+                        
                     }
                 }
             );

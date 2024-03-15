@@ -7,12 +7,12 @@ import {ShoppingDb} from "./database/ShoppingDb"
 import cors from "cors"
 
 
-const app : Express = express();
+export const app : Express = express();
 app.use(cors())
 ShoppingDb.initialize();
 
 
-app.listen(3000, () => console.log('Shopping backend is listening on port 3000.'));
+export const server = app.listen(3000, () => console.log('Shopping backend is listening on port 3000.'));
 
 
 app.use("/", baseRouter)

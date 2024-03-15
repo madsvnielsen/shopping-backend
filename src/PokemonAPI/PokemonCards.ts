@@ -48,7 +48,6 @@ export class PokemonAPI{
 
         }
     }
-
     static async listOfCards() : Promise<Array<Card>> {
         try {
             const response = await fetch(
@@ -69,5 +68,21 @@ export class PokemonAPI{
             return Promise.reject("Couldn't get Card")
 
         }
+    }
+    static async getPokemonCardsFromIds(cardIds: Array<string>) : Promise<Array<Card>>{
+        try {
+             const result : Array<Card> = []
+
+
+             for await (const id of cardIds) {
+                 const card : Card = await PokemonAPI.getPokemonCard(id)
+                 result.push(card)
+             }
+            return result
+        } catch (error) {
+            return Promise.reject("Couldn't get Cards")
+
+        }
+
     }
 }

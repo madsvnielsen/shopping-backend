@@ -4,9 +4,11 @@ import * as swaggerDocument from './ApiDocs/swagger.json';
 import {baseRouter} from "./routes/BaseRouter";
 import {Sequelize} from "sequelize"
 import {ShoppingDb} from "./database/ShoppingDb"
+import cors from "cors"
 
 
 const app : Express = express();
+app.use(cors())
 ShoppingDb.initialize();
 
 

@@ -1,17 +1,17 @@
 import swaggerAutogen from 'swagger-autogen';
 
+let dev = true;
+let host = dev ? "localhost:3000" : "130.225.170.52:10261/api"
+
+
 const doc = {
     info: {
         version: 'v0.0.5',
         title: 'Shopping backend',
         description: 'Backend for a web shop'
     },
-    servers: [
-        {
-            url: 'http://localhost:3000',
-            description: ''
-        },
-    ],
+    host: host,
+
     components: {
         securitySchemes: {
             bearerAuth: {

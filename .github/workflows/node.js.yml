@@ -10,18 +10,14 @@ on:
     branches: [ "main" ]
 env: 
   API_KEY : 'x'
-  DB_HOST: 'localhost:32574'
+  DB_HOST: 'localhost:3306'
   DB_NAME: 'shoppingdb'
   DB_USER: 'root'
-  DB_PASSWORD: 'password'
+  DB_PASSWORD: 'somepassword'
   DB_DIALECT: 'mariadb'
 jobs:
   build:
-    services:
-        mariadb:
-          image: mariadb:15.1
-        ports:
-          32574:3306
+   
     runs-on: ubuntu-latest
     
 
@@ -37,6 +33,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - uses: getong/mariadb-action@v1.1
+      with:
+        mariadb version: '15.1.0' # Optional, default value is "latest". The version of the MariaDB
+        mysql database: 'shoppingdb' # Optional, default value is "test". The specified database which will be create
+        mysql root password: "somepassword" # Required if "mysql user" is empty, default is empty. The root superuser password
+        
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test

@@ -5,13 +5,7 @@
     "title": "Shopping backend",
     "description": "Backend for a web shop"
   },
-  "host": "localhost:3000",
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": ""
-    }
-  ],
+  "host": "130.225.170.52:10261/api",
   "basePath": "/",
   "schemes": [
     "http"
@@ -96,6 +90,32 @@
         }
       }
     },
+    "/basket/": {
+      "get": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Get basket",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Delete basket",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/basket/add": {
       "post": {
         "tags": [
@@ -146,20 +166,6 @@
         }
       }
     },
-    "/basket/": {
-      "delete": {
-        "tags": [
-          "Basket"
-        ],
-        "summary": "Delete basket",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/basket/order": {
       "post": {
         "tags": [
@@ -167,6 +173,23 @@
         ],
         "summary": "Place order",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

@@ -17,7 +17,13 @@ export function initOrder(sequelize : Sequelize) : void {
         },
         orderNumber: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: false,
+          primaryKey: true
+      },
+      itemIds: {
+          type: DataTypes.JSON,
+          allowNull: false,
+
       },
       totalPrice : {
           type: DataTypes.DOUBLE,

@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 env: 
   API_KEY : 'x'
-  DB_HOST: 'localhost:3306'
+  DB_HOST: 'localhost'
   DB_NAME: 'shoppingdb'
   DB_USER: 'dev'
   DB_PASSWORD: 'somepassword'

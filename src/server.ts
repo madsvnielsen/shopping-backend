@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from "express";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from './ApiDocs/swagger.json';
 import {baseRouter} from "./routes/BaseRouter";
-import {Sequelize} from "sequelize"
 import {ShoppingDb} from "./database/ShoppingDb"
 import cors from "cors"
 
@@ -24,7 +23,7 @@ app.get("/dbtest", (req : Request, res : Response) => {
     // #swagger.description = 'Shows if the db is authentication'
     ShoppingDb.sequelize.authenticate().then(() => {
           res.send('Connection has been established successfully.')
-    }).catch((error) => {
+    }).catch((error: Error) => {
         res.send('Unable to connect to the database: ' + error);
     })
 

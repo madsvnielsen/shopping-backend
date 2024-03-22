@@ -200,13 +200,21 @@
         }
       }
     },
-    "/basket/order/receipt": {
+    "/basket/order/receipt/{ordernumber}": {
       "get": {
         "tags": [
           "Basket"
         ],
         "summary": "Get receipt basket",
         "description": "Maybe this should be post idk?",
+        "parameters": [
+          {
+            "name": "ordernumber",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

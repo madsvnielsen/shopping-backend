@@ -7,7 +7,7 @@ A backend for a shopping website
 * node.js 🟩
 * Express 🌐
 * Sequelize 🧩
-* mySql db 🎁
+* maria db 🎁
 * Apache web server
 
 

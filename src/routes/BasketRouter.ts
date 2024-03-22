@@ -101,6 +101,7 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
     // #swagger.tags = ["Basket"]
     // TODO:
     const sessionId = req.sessionID
+    const orderNumber = crypto.randomUUID();
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
@@ -119,10 +120,9 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
 
         })
 
-
         Order.create({firstName: req.body.firstName,
             lastName: req.body.lastName,
-            orderNumber: crypto.randomUUID(),
+            orderNumber: orderNumber,
             itemIds: basket,
             totalPrice: totalPrice
         });
@@ -135,21 +135,31 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
 
 
 
-    return res.send("Created order")
+    return res.send({"Order": orderNumber})
 })
 
-basketRouter.get("/order/receipt", (req : Request, res : Response) => {
+basketRouter.get("/order/receipt/:ordernumber", async (req: Request<{ ordernumber: string }>, res: Response) => {
 
     // #swagger.summary = 'Get receipt  basket'
     // #swagger.tags = ["Basket"]
     // #swagger.description = 'Maybe this should be post idk?' IS THIS FOR RETRIEVING ThE BASKET?????!??!?!?!
 
+    const order = await Order.findOne({
+        where: {
+            orderNumber: req.params.ordernumber
+        }
+    });
+
 
     const sessionId = req.sessionID;
     let basket = basketStorage[sessionId];
-    if (!basket){
+    if (!basket) {
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    return res.send(basket)
+    if (order == null) {
+        return res.send("Order does not exist")
+    } else {
+        return res.send(order)
+    }
 })

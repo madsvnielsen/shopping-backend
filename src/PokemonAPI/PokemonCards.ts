@@ -19,11 +19,19 @@ export class PokemonAPI{
 
             );
             const json = await response.json();
-            //console.log(outJSON);
+            console.log(json);
+            if(!response.ok){
+                if(response.status === 404){
+                    throw new Error ("card not found");
+                }else{
+                    throw new Error ("Fatal error");
+                }
+            }
+            console.log("no errors present")
             return json.data as Card
         } catch (error) {
+            console.log("fatal error")
             return Promise.reject("Couldn't get Card")
-
         }
     };
 
@@ -42,8 +50,16 @@ export class PokemonAPI{
             );
             const json = await response.json();
             console.log(json);
+            if(!response.ok){
+                if(response.status === 404){
+                    throw new Error ("card not found");
+                }else{
+                    throw new Error ("Fatal error");
+                }
+            }
             return json.data
         } catch (error) {
+            console.log("error")
             return Promise.reject("Couldn't get Card")
 
         }

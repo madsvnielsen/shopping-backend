@@ -49,10 +49,17 @@ basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => 
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    basket.push(item);
+    PokemonAPI.getPokemonCard(item).then((result : Card) => {
+        console.log("no failure")
+        basket.push(item)
+        return res.send({sessionId, basket})
+    }).catch((e) => {
+        const error = "fatalError"
+        res.statusCode = 404;
+        return res.send("fatal backend error");
+    })
     console.log(basket);
     // TODO:
-    return res.send({sessionId, basket})
 })
 
 

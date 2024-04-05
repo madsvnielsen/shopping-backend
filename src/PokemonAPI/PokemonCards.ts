@@ -23,6 +23,8 @@ export class PokemonAPI{
             if(!response.ok){
                 if(response.status === 404){
                     throw new Error ("card not found");
+                }else if(response.status === 429){
+                    throw new Error ("Rate exceeded")
                 }else{
                     throw new Error ("Fatal error");
                 }
@@ -53,7 +55,10 @@ export class PokemonAPI{
             if(!response.ok){
                 if(response.status === 404){
                     throw new Error ("card not found");
-                }else{
+                }else if(response.status === 429){
+                    throw new Error ("Rate exceeded")
+                }
+                else{
                     throw new Error ("Fatal error");
                 }
             }
@@ -80,6 +85,16 @@ export class PokemonAPI{
             );
             const json = await response.json();
             console.log(json);
+            if(!response.ok){
+                if(response.status === 404){
+                    throw new Error ("card not found");
+                }else if(response.status === 429){
+                    throw new Error ("Rate exceeded")
+                }
+                else{
+                    throw new Error ("Fatal error");
+                }
+            }
             return json.data
         } catch (error) {
             return Promise.reject("Couldn't get Card")

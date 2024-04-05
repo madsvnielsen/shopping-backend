@@ -98,7 +98,6 @@ export class PokemonAPI{
             return json.data
         } catch (error) {
             return Promise.reject("Couldn't get Card")
-
         }
     }
     static async getPokemonCardsFromIds(cardIds: Array<string>) : Promise<Array<Card>>{
@@ -113,7 +112,6 @@ export class PokemonAPI{
             return result
         } catch (error) {
             return Promise.reject("Couldn't get Cards")
-
         }
 
     }

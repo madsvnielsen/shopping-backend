@@ -4,6 +4,7 @@ import {Order} from "../Models/DataModels/OrderModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+import { giftcard } from "Models/DataModels/GiftcardModel";
 
 export const basketRouter = express.Router();
 export const sessionManager = express();
@@ -170,3 +171,28 @@ basketRouter.get("/order/receipt/:ordernumber", async (req: Request<{ ordernumbe
         return res.send(order)
     }
 })
+
+basketRouter.get("/giftcard",  async (req: Request<{ ordernumber: string }>, res: Response) => {
+
+
+
+    return res.send()
+
+});
+
+basketRouter.post("/giftcard/buy",  async (req: Request<{ amount: string }>, res: Response) => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+      
+
+    giftcard.create({amount: req.body.amount,
+        giftcardID: result
+    });
+
+    
+
+    return res.send(result)
+});

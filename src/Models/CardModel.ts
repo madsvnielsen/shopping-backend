@@ -3,3 +3,4 @@ export interface Card {
     name : string,
     cardmarket : {prices : {averageSellPrice : number}}
 }
+

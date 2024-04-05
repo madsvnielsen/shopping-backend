@@ -1,5 +1,6 @@
 import {Sequelize, Dialect} from "sequelize"
 import {initOrder}  from "../Models/DataModels/OrderModel"
+import { initGiftCard } from "Models/DataModels/GiftcardModel";
 
 export class ShoppingDb{
     static readonly sequelize = new Sequelize(
@@ -15,6 +16,7 @@ export class ShoppingDb{
     static async initialize() {
         ShoppingDb.sequelize.authenticate().then(() => {
             initOrder(ShoppingDb.sequelize)
+            initGiftCard(ShoppingDb.sequelize)
             ShoppingDb.sequelize.sync({alter: true})
 
 

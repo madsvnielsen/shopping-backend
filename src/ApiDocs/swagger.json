@@ -35,6 +35,16 @@
         }
       }
     },
+    "/testMail/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/list": {
       "get": {
         "tags": [

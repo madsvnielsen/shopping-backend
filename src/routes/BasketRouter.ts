@@ -5,6 +5,7 @@ import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+import { sendOrderConfirmationMail } from "../mailgun/MailgunApi";
 
 
 export const basketRouter = express.Router();
@@ -137,7 +138,7 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
             orderNumber: orderNumber
         })
 
-        Order.create({firstName: req.body.firstName,
+        const order = await Order.create({firstName: req.body.firstName,
             lastName: req.body.lastName,
             orderNumber: orderNumber,
             itemIds: basket,
@@ -146,10 +147,9 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
             email: "mads@hvn.dk",
             deliveryAddress: address.dataValues.id,
             billingAddress: address.dataValues.id
-        }).then(() =>{
-            
-
         })
+
+        sendOrderConfirmationMail(order, cards, address, address)
 
 
         basketStorage[sessionId] = []

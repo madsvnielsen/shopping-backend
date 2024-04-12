@@ -5,6 +5,7 @@ import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+import {Payment, PaymentMethod} from "../Models/DataModels/PaymentModel";
 
 
 export const basketRouter = express.Router();
@@ -115,6 +116,7 @@ interface OrderRequestBody {
     streetName: string;
     city: string;
     zipcode: number;
+    paymentMethod: PaymentMethod;
 
 }
 basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) => {
@@ -141,6 +143,10 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
         })
         const orderNumber = crypto.randomUUID();
 
+        const payment = await Payment.create({
+            paymentMethod : req.body.paymentMethod
+        })
+
         const address = await Address.create({
             streetName: req.body.streetName,
             city: req.body.city,
@@ -156,7 +162,8 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
             phoneNumber: req.body.phoneNumber,
             email: req.body.email,
             deliveryAddress: address.dataValues.id,
-            billingAddress: address.dataValues.id
+            billingAddress: address.dataValues.id,
+            payment: payment.dataValues.id
         }).then(() =>{
 
 

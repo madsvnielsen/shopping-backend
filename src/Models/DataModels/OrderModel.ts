@@ -1,5 +1,6 @@
 import {Sequelize, DataTypes, Model} from "sequelize"
 import { Address } from "./AddressModel"
+import {Payment} from "./PaymentModel";
 
 
 
@@ -39,10 +40,6 @@ export function initOrder(sequelize : Sequelize) : void {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    /*paymentMethod: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },*/
       itemIds: {
           type: DataTypes.JSON,
           allowNull: false,
@@ -58,5 +55,7 @@ export function initOrder(sequelize : Sequelize) : void {
     })
     Order.belongsTo(Address, {foreignKey: 'deliveryAddress'})
     Order.belongsTo(Address, {foreignKey: 'billingAddress'})
+    Order.belongsTo(Payment, {foreignKey: 'payment'})
+
 
 }

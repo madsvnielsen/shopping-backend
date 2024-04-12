@@ -25,7 +25,4 @@ export function initAddress(sequelize : Sequelize) : void {
       sequelize
     })
 
-    
-
-
 }

@@ -1,6 +1,7 @@
 import {Sequelize, Dialect} from "sequelize"
 import {initOrder}  from "../Models/DataModels/OrderModel"
 import {initAddress}  from "../Models/DataModels/AddressModel"
+import {initPayment} from "../Models/DataModels/PaymentModel";
 
 export class ShoppingDb{
     static readonly sequelize = new Sequelize(
@@ -17,6 +18,7 @@ export class ShoppingDb{
         ShoppingDb.sequelize.authenticate().then(() => {
             
             initAddress(ShoppingDb.sequelize)
+            initPayment(ShoppingDb.sequelize)
             initOrder(ShoppingDb.sequelize)
             ShoppingDb.sequelize.sync({force: true})
 

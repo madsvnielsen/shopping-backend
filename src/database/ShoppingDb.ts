@@ -1,7 +1,6 @@
 import {Sequelize, Dialect} from "sequelize"
-import {initOrder, Order} from "../Models/DataModels/OrderModel"
-import {Address, initAddress} from "../Models/DataModels/AddressModel";
-
+import {initOrder}  from "../Models/DataModels/OrderModel"
+import {initAddress}  from "../Models/DataModels/AddressModel"
 
 export class ShoppingDb{
     static readonly sequelize = new Sequelize(
@@ -13,12 +12,12 @@ export class ShoppingDb{
       logging : false
   });
 
+
     static async initialize() {
         ShoppingDb.sequelize.authenticate().then(() => {
-            initOrder(ShoppingDb.sequelize)
+            
             initAddress(ShoppingDb.sequelize)
-            Order.hasOne(Address, { foreignKey: "addressId" });
-            //Address.belongsTo(Order);
+            initOrder(ShoppingDb.sequelize)
             ShoppingDb.sequelize.sync({force: true})
 
 
@@ -27,5 +26,9 @@ export class ShoppingDb{
         })
 
     };
+
+
+
+
 
 }

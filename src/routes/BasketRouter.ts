@@ -1,16 +1,18 @@
-import express, {Express, Request, Response} from "express";
+import express, { Express, Request, Response } from "express";
 import session from "express-session";
 import {Order} from "../Models/DataModels/OrderModel";
+import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
-import {Address} from "../Models/DataModels/AddressModel";
+
 
 export const basketRouter = express.Router();
 export const sessionManager = express();
 
 
-const basketStorage: { [key: string]: any[] } = {};
+
+const basketStorage : {[key: string]: any[]} = {};
 
 basketRouter.use(express.json());
 basketRouter.use(express.urlencoded({extended: false}));
@@ -22,20 +24,22 @@ basketRouter.use(session({ //session settings
 }));
 
 
-basketRouter.get("/", (req: Request, res: Response) => {
+
+
+basketRouter.get("/", (req : Request, res : Response) => {
     // #swagger.summary = 'Get basket'
     // #swagger.tags = ["Basket"]
     const sessionId = req.sessionID; //Unique identifier,
     const item = req.body.itemId;
     let basket = basketStorage[sessionId];
-    if (!basket) {
+    if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
     return res.send({"basket": basket})
 })
 
-basketRouter.post("/add", (req: Request<{ itemId: string }>, res: Response) => {
+basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
     console.log("add");
     const sessionId = req.sessionID; //Unique identifier,
     const item = req.body.itemId;
@@ -43,11 +47,11 @@ basketRouter.post("/add", (req: Request<{ itemId: string }>, res: Response) => {
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
     let basket = basketStorage[sessionId];
-    if (!basket) {
+    if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    PokemonAPI.getPokemonCard(item).then((result: Card) => {
+    PokemonAPI.getPokemonCard(item).then((result : Card) => {
         console.log("no failure")
         basket.push(item)
         return res.send({sessionId, basket})
@@ -61,19 +65,20 @@ basketRouter.post("/add", (req: Request<{ itemId: string }>, res: Response) => {
 })
 
 
-basketRouter.delete("/:item_id", (req, res: Response) => {
+
+basketRouter.delete("/:item_id", (req, res : Response) => {
     // #swagger.summary = 'Remove item from basket'
     // #swagger.tags = ["Basket"]
     const sessionId = req.sessionID;
     console.log(sessionId);
     let basket = basketStorage[sessionId];
-    if (!basket) {
+    if(!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
 
-    for (let i = 0; i < basket.length; i++) {
-        if (basket[i] == req.params.item_id) {
+    for(let i = 0; i < basket.length; i++){
+        if (basket[i] == req.params.item_id){
             let itemToRemove = i;
             basket = basket.filter((e, j) => j !== itemToRemove)
             basketStorage[sessionId] = basket;
@@ -84,11 +89,12 @@ basketRouter.delete("/:item_id", (req, res: Response) => {
     return res.send(basket)
 })
 
-basketRouter.delete("/", (req: Request, res: Response) => {
+basketRouter.delete("/", (req : Request, res : Response) => {
     let sessionId = req.sessionID;
     let basket = basketStorage[sessionId];
     basket = [];
     basketStorage[sessionId] = basket;
+
 
 
     // #swagger.summary = 'Delete basket'
@@ -99,53 +105,61 @@ basketRouter.delete("/", (req: Request, res: Response) => {
     return res.send(basket)
 })
 
-basketRouter.post("/order", (req: Request<{ firstName: string, lastName: string }>, res: Response) => {
+basketRouter.post("/order", (req : Request<{firstName : string, lastName : string}>, res : Response) => {
     // #swagger.summary = 'Place order'
     // #swagger.tags = ["Basket"]
     // TODO:
     const sessionId = req.sessionID
-    const orderNumber = crypto.randomUUID();
-    const addressID = crypto.randomUUID();
+    
     let basket = basketStorage[sessionId];
-    if (!basket) {
+    if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
 
-    if (basket.length == 0) {
+    if(basket.length == 0){
         return res.send("Basket is empty!")
     }
 
-    PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then(async (cards: Array<Card>) => {
+    PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then(async (cards : Array<Card>) => {
 
         let totalPrice = 0;
-        cards.forEach((card: Card) => {
+        cards.forEach((card : Card) => {
             totalPrice += card.cardmarket.prices.averageSellPrice
 
         })
-        await Address.create({
-            addressId: addressID,
-            city: "Test City",
-        });
+        const orderNumber = crypto.randomUUID();
 
-        await Order.create({
-            firstName: req.body.firstName,
+        const address = await Address.create({
+            streetName: "Pis",
+            city: "Lort",
+            zipCode: "1234",
+            orderNumber: orderNumber
+        })
+
+        Order.create({firstName: req.body.firstName,
             lastName: req.body.lastName,
-            addressId: addressID,
             orderNumber: orderNumber,
             itemIds: basket,
             totalPrice: totalPrice,
-            orderComment: "test comment",
-            marketingEmails: true
-        });
+            phoneNumber: "12345678",
+            email: "mads@hvn.dk",
+            deliveryAddress: address.dataValues.id,
+            billingAddress: address.dataValues.id
+        }).then(() =>{
+            
+
+        })
 
 
         basketStorage[sessionId] = []
+        return res.send({"Order": orderNumber})
 
     })
 
 
-    return res.send({"Order": orderNumber, "Address": addressID})
+
+
 })
 
 basketRouter.get("/order/receipt/:ordernumber", async (req: Request<{ ordernumber: string }>, res: Response) => {

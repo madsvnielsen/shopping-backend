@@ -40,6 +40,7 @@ basketRouter.get("/", (req : Request, res : Response) => {
     return res.send({"basket": basket})
 })
 
+
 basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
     console.log("add");
     const sessionId = req.sessionID; //Unique identifier,
@@ -106,12 +107,22 @@ basketRouter.delete("/", (req : Request, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.post("/order", (req : Request<{firstName : string, lastName : string}>, res : Response) => {
+interface OrderRequestBody {
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    phoneNumber: number;
+    email: string;
+    streetName: string;
+    city: string;
+    zipcode: number;
+
+}
+basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) => {
     // #swagger.summary = 'Place order'
     // #swagger.tags = ["Basket"]
-    // TODO:
     const sessionId = req.sessionID
-    
+
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
@@ -132,9 +143,9 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
         const orderNumber = crypto.randomUUID();
 
         const address = await Address.create({
-            streetName: "Pis",
-            city: "Lort",
-            zipCode: "1234",
+            streetName: req.body.streetName,
+            city: req.body.city,
+            zipCode: req.body.zipCode,
             orderNumber: orderNumber
         })
 
@@ -143,10 +154,11 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
             orderNumber: orderNumber,
             itemIds: basket,
             totalPrice: totalPrice,
-            phoneNumber: "12345678",
-            email: "mads@hvn.dk",
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
             deliveryAddress: address.dataValues.id,
             billingAddress: address.dataValues.id
+
         })
 
         sendOrderConfirmationMail(order, cards, address, address)
@@ -156,8 +168,6 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
         return res.send({"Order": orderNumber})
 
     })
-
-
 
 
 })

@@ -193,10 +193,25 @@
             "schema": {
               "type": "object",
               "properties": {
+                "streetName": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "zipCode": {
+                  "example": "any"
+                },
                 "firstName": {
                   "example": "any"
                 },
                 "lastName": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "email": {
                   "example": "any"
                 }
               }

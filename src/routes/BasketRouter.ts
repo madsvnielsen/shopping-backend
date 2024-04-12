@@ -5,6 +5,7 @@ import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+import { sendOrderConfirmationMail } from "../mailgun/MailgunApi";
 import {Payment, PaymentMethod} from "../Models/DataModels/PaymentModel";
 
 
@@ -154,7 +155,7 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
             orderNumber: orderNumber
         })
 
-        Order.create({firstName: req.body.firstName,
+        const order = await Order.create({firstName: req.body.firstName,
             lastName: req.body.lastName,
             orderNumber: orderNumber,
             itemIds: basket,
@@ -168,6 +169,8 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
 
 
         })
+
+        sendOrderConfirmationMail(order, cards, address, address)
 
 
         basketStorage[sessionId] = []

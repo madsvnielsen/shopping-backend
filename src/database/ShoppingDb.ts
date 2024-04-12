@@ -20,7 +20,7 @@ export class ShoppingDb{
             initAddress(ShoppingDb.sequelize)
             initPayment(ShoppingDb.sequelize)
             initOrder(ShoppingDb.sequelize)
-            ShoppingDb.sequelize.sync({force: true})
+            ShoppingDb.sequelize.sync({alter: true})
 
 
         }).catch((error) => {

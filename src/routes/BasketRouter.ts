@@ -1,9 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import session from "express-session";
 import {Order} from "../Models/DataModels/OrderModel";
+import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+
 
 export const basketRouter = express.Router();
 export const sessionManager = express();
@@ -108,7 +110,7 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
     // #swagger.tags = ["Basket"]
     // TODO:
     const sessionId = req.sessionID
-    const orderNumber = crypto.randomUUID();
+    
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
@@ -119,30 +121,45 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
         return res.send("Basket is empty!")
     }
 
-        PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then((cards : Array<Card>) => {
+    PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then(async (cards : Array<Card>) => {
 
         let totalPrice = 0;
         cards.forEach((card : Card) => {
             totalPrice += card.cardmarket.prices.averageSellPrice
 
         })
+        const orderNumber = crypto.randomUUID();
+
+        const address = await Address.create({
+            streetName: "Pis",
+            city: "Lort",
+            zipCode: "1234",
+            orderNumber: orderNumber
+        })
 
         Order.create({firstName: req.body.firstName,
             lastName: req.body.lastName,
             orderNumber: orderNumber,
             itemIds: basket,
-            totalPrice: totalPrice
-        });
+            totalPrice: totalPrice,
+            phoneNumber: "12345678",
+            email: "mads@hvn.dk",
+            deliveryAddress: address.dataValues.id,
+            billingAddress: address.dataValues.id
+        }).then(() =>{
+            
+
+        })
 
 
         basketStorage[sessionId] = []
+        return res.send({"Order": orderNumber})
 
     })
 
 
 
 
-    return res.send({"Order": orderNumber})
 })
 
 basketRouter.get("/order/receipt/:ordernumber", async (req: Request<{ ordernumber: string }>, res: Response) => {

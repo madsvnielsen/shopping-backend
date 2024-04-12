@@ -1,5 +1,6 @@
 import {Sequelize, Dialect} from "sequelize"
 import {initOrder}  from "../Models/DataModels/OrderModel"
+import {initAddress}  from "../Models/DataModels/AddressModel"
 
 export class ShoppingDb{
     static readonly sequelize = new Sequelize(
@@ -14,8 +15,10 @@ export class ShoppingDb{
 
     static async initialize() {
         ShoppingDb.sequelize.authenticate().then(() => {
+            
+            initAddress(ShoppingDb.sequelize)
             initOrder(ShoppingDb.sequelize)
-            ShoppingDb.sequelize.sync({alter: true})
+            ShoppingDb.sequelize.sync({force: true})
 
 
         }).catch((error) => {

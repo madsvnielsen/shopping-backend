@@ -165,9 +165,6 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
             deliveryAddress: address.dataValues.id,
             billingAddress: address.dataValues.id,
             payment: payment.dataValues.id
-        }).then(() =>{
-
-
         })
 
         sendOrderConfirmationMail(order, cards, address, address)

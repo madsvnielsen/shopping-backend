@@ -1,4 +1,5 @@
 import {Sequelize, DataTypes, Model} from "sequelize"
+import {Address, initAddress} from "./AddressModel";
 
 
 
@@ -14,6 +15,10 @@ export function initOrder(sequelize : Sequelize) : void {
       lastName: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+        addressId: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
 
         orderNumber: {
@@ -21,6 +26,7 @@ export function initOrder(sequelize : Sequelize) : void {
           allowNull: false,
           primaryKey: true
       },
+        /*
       StreetAddress: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -54,18 +60,27 @@ export function initOrder(sequelize : Sequelize) : void {
       type: DataTypes.STRING,
       allowNull: false,
     },
+
+         */
       itemIds: {
           type: DataTypes.JSON,
           allowNull: false,
-
       },
       totalPrice : {
           type: DataTypes.DOUBLE,
           allowNull: false
-      }
+      },
+        orderComment : {
+          type: DataTypes.STRING,
+            allowNull: true,
+        },
+        marketingEmails : {
+          type: DataTypes.BOOLEAN,
+            allowNull: false,
+        }
 
     }, {
-      sequelize
-    })
-
+        sequelize,
+        modelName: 'Order'
+    });
 }

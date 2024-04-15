@@ -35,6 +35,16 @@
         }
       }
     },
+    "/testMail/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/list": {
       "get": {
         "tags": [
@@ -134,6 +144,9 @@
               "type": "object",
               "properties": {
                 "itemId": {
+                  "example": "any"
+                },
+                "quantity": {
                   "example": "any"
                 }
               }

@@ -7,6 +7,7 @@ import {Card} from "../Models/CardModel";
 import crypto from "crypto"
 import { sendOrderConfirmationMail } from "../mailgun/MailgunApi";
 import {Payment, PaymentMethod} from "../Models/DataModels/PaymentModel";
+import {NUMBER} from "sequelize";
 
 
 export const basketRouter = express.Router();
@@ -14,7 +15,13 @@ export const sessionManager = express();
 
 
 
-const basketStorage : {[key: string]: any[]} = {};
+const basketStorage: { [key: string]: BasketItem[] } = {};
+
+interface BasketItem {
+    id: string;
+    quantity: number;
+    card: Card;
+}
 
 basketRouter.use(express.json());
 basketRouter.use(express.urlencoded({extended: false}));
@@ -42,30 +49,48 @@ basketRouter.get("/", (req : Request, res : Response) => {
 })
 
 
-basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
+basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number }>, res: Response) => {
     console.log("add");
-    const sessionId = req.sessionID; //Unique identifier,
+    const sessionId = req.sessionID; // Unique identifier
     const item = req.body.itemId;
+    const quantity = req.body.quantity || 1;
+
     console.log(sessionId);
+
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
-    let basket = basketStorage[sessionId];
-    if (!basket){
-        basket = [];
+
+    try {
+        let basket = basketStorage[sessionId];
+
+        if (!basket) {
+            basket = [];
+            basketStorage[sessionId] = basket;
+        }
+
+        const existingItem = basket.find(existing => existing.id === item);
+        const index = basket.findIndex(existing => existing.id === item)
+
+
+        if (existingItem) {
+            const quan: number = Number(existingItem.quantity) + Number(quantity);
+
+            basket[index].quantity = quan;
+        } else {
+            const pokemonCard = await PokemonAPI.getPokemonCard(item);
+            basket.push({id: item, quantity: Number(quantity), card: pokemonCard,});
+        }
+
         basketStorage[sessionId] = basket;
-    }
-    PokemonAPI.getPokemonCard(item).then((result : Card) => {
-        console.log("no failure")
-        basket.push(item)
-        return res.send({sessionId, basket})
-    }).catch((e) => {
-        const error = "fatalError"
+
+        return res.send({ sessionId, basket });
+    } catch (e) {
+        console.error(e);
+        const error = "fatalError";
         res.statusCode = 404;
         return res.send("fatal backend error");
-    })
-    console.log(basket);
-    // TODO:
-})
+    }
+});
 
 
 
@@ -81,7 +106,7 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     }
 
     for(let i = 0; i < basket.length; i++){
-        if (basket[i] == req.params.item_id){
+        if (basket[i].id == req.params.item_id){
             let itemToRemove = i;
             basket = basket.filter((e, j) => j !== itemToRemove)
             basketStorage[sessionId] = basket;
@@ -135,7 +160,7 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
         return res.send("Basket is empty!")
     }
 
-    PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then(async (cards : Array<Card>) => {
+    PokemonAPI.getPokemonCardsFromIds(basket.map(val => val.id)).then(async (cards : Array<Card>) => {
 
         let totalPrice = 0;
         cards.forEach((card : Card) => {

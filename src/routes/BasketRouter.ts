@@ -36,34 +36,27 @@ basketRouter.use(session({ //session settings
 
 
 
-basketRouter.get("/get", (req : Request, res : Response) => {
+basketRouter.get("/:sessionId?", (req : Request<{sessionId?: string}>, res : Response) => {
     // #swagger.summary = 'Get basket'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID; //Unique identifier,
+    const sessionId = req.params.sessionId === undefined ? req.sessionID : req.params.sessionId; //Unique identifier,
     const item = req.body.itemId;
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    return res.send({"basket": basket, "sessionId": sessionId})
+    return res.send({basket, sessionId})
 })
 
 
-basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number, Id: string }>, res: Response) => {
-   // console.log("add");
-    let sessionId;
-    if (req.body.Id == ""){
-        sessionId = req.sessionID;
-    } else {
-        sessionId = req.body.Id
-    }
-    //const sessionId: string = req.body.Id == "" ? req.sessionID;  // Unique identifier
+basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number, sessionId?: string}>, res: Response) => {
+    console.log("add");
+    const sessionId = req.body.sessionId === undefined? req.sessionID : req.body.sessionId; // Unique identifier
     const item = req.body.itemId;
     const quantity = req.body.quantity || 1;
 
-    console.log(req.body.itemId );
-    console.log(req.body.quantity );
+    console.log(sessionId);
 
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
@@ -106,7 +99,7 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     // #swagger.summary = 'Remove item from basket'
     // #swagger.tags = ["Basket"]
     const sessionId = req.sessionID;
-    //console.log(sessionId);
+    console.log(sessionId);
     let basket = basketStorage[sessionId];
     if(!basket){
         basket = [];

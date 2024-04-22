@@ -103,13 +103,21 @@
         }
       }
     },
-    "/basket/get": {
+    "/basket/{sessionId?}": {
       "get": {
         "tags": [
           "Basket"
         ],
         "summary": "Get basket",
         "description": "",
+        "parameters": [
+          {
+            "name": "sessionId?",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -131,7 +139,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "Id": {
+                "sessionId": {
                   "example": "any"
                 },
                 "itemId": {
@@ -173,7 +181,7 @@
         }
       }
     },
-    "/basket/delete": {
+    "/basket/": {
       "delete": {
         "tags": [
           "Basket"

@@ -94,10 +94,10 @@ basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: numbe
 
 
 
-basketRouter.delete("/:item_id", (req, res : Response) => {
+basketRouter.delete("/:sessionId/:item_id", (req, res : Response) => {
     // #swagger.summary = 'Remove item from basket'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID;
+    const sessionId = req.params.sessionId;
     console.log(sessionId);
     let basket = basketStorage[sessionId];
     if(!basket){
@@ -117,8 +117,8 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.delete("/", (req : Request, res : Response) => {
-    let sessionId = req.sessionID;
+basketRouter.delete("/:sessionId/", (req : Request, res : Response) => {
+    let sessionId = req.params.sessionId;
     let basket = basketStorage[sessionId];
     basket = [];
     basketStorage[sessionId] = basket;

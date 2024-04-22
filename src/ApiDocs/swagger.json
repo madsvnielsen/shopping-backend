@@ -159,7 +159,7 @@
         }
       }
     },
-    "/basket/{item_id}": {
+    "/basket/{sessionId}/{item_id}": {
       "delete": {
         "tags": [
           "Basket"
@@ -167,6 +167,12 @@
         "summary": "Remove item from basket",
         "description": "",
         "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "item_id",
             "in": "path",
@@ -181,13 +187,21 @@
         }
       }
     },
-    "/basket/": {
+    "/basket/{sessionId}/": {
       "delete": {
         "tags": [
           "Basket"
         ],
         "summary": "Delete basket",
         "description": "",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

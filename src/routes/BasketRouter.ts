@@ -21,6 +21,7 @@ interface BasketItem {
     id: string;
     quantity: number;
     card: Card;
+    isLaminated: boolean;
 }
 
 basketRouter.use(express.json());
@@ -35,7 +36,7 @@ basketRouter.use(session({ //session settings
 
 
 
-basketRouter.get("/", (req : Request, res : Response) => {
+basketRouter.get("/get", (req : Request, res : Response) => {
     // #swagger.summary = 'Get basket'
     // #swagger.tags = ["Basket"]
     const sessionId = req.sessionID; //Unique identifier,
@@ -45,17 +46,24 @@ basketRouter.get("/", (req : Request, res : Response) => {
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    return res.send({"basket": basket})
+    return res.send({"basket": basket, "sessionId": sessionId})
 })
 
 
-basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number }>, res: Response) => {
-    console.log("add");
-    const sessionId = req.sessionID; // Unique identifier
+basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number, Id: string }>, res: Response) => {
+   // console.log("add");
+    let sessionId;
+    if (req.body.Id == ""){
+        sessionId = req.sessionID;
+    } else {
+        sessionId = req.body.Id
+    }
+    //const sessionId: string = req.body.Id == "" ? req.sessionID;  // Unique identifier
     const item = req.body.itemId;
     const quantity = req.body.quantity || 1;
 
-    console.log(sessionId);
+    console.log(req.body.itemId );
+    console.log(req.body.quantity );
 
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
@@ -78,7 +86,7 @@ basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: numbe
             basket[index].quantity = quan;
         } else {
             const pokemonCard = await PokemonAPI.getPokemonCard(item);
-            basket.push({id: item, quantity: Number(quantity), card: pokemonCard,});
+            basket.push({id: item, quantity: Number(quantity), card: pokemonCard, isLaminated: false});
         }
 
         basketStorage[sessionId] = basket;
@@ -98,7 +106,7 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     // #swagger.summary = 'Remove item from basket'
     // #swagger.tags = ["Basket"]
     const sessionId = req.sessionID;
-    console.log(sessionId);
+    //console.log(sessionId);
     let basket = basketStorage[sessionId];
     if(!basket){
         basket = [];
@@ -117,7 +125,7 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.delete("/", (req : Request, res : Response) => {
+basketRouter.delete("/delete", (req : Request, res : Response) => {
     let sessionId = req.sessionID;
     let basket = basketStorage[sessionId];
     basket = [];

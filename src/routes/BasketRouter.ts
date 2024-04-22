@@ -21,6 +21,7 @@ interface BasketItem {
     id: string;
     quantity: number;
     card: Card;
+    isLaminated: boolean;
 }
 
 basketRouter.use(express.json());
@@ -78,7 +79,7 @@ basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: numbe
             basket[index].quantity = quan;
         } else {
             const pokemonCard = await PokemonAPI.getPokemonCard(item);
-            basket.push({id: item, quantity: Number(quantity), card: pokemonCard,});
+            basket.push({id: item, quantity: Number(quantity), card: pokemonCard, isLaminated: false});
         }
 
         basketStorage[sessionId] = basket;
@@ -117,8 +118,10 @@ basketRouter.delete("/:sessionId/:item_id", (req, res : Response) => {
     return res.send(basket)
 })
 
+
 basketRouter.delete("/:sessionId/", (req : Request, res : Response) => {
     let sessionId = req.params.sessionId;
+
     let basket = basketStorage[sessionId];
     basket = [];
     basketStorage[sessionId] = basket;

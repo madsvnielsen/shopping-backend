@@ -137,8 +137,7 @@ basketRouter.delete("/:sessionId/", (req : Request, res : Response) => {
 })
 
 interface OrderRequestBody {
-    firstName: string;
-    lastName: string;
+    fullName: string;
     companyName: string;
     phoneNumber: number;
     email: string;
@@ -146,12 +145,13 @@ interface OrderRequestBody {
     city: string;
     zipcode: number;
     paymentMethod: PaymentMethod;
+    sessionId : string;
 
 }
 basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) => {
     // #swagger.summary = 'Place order'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID
+    const sessionId = req.body.sessionId === undefined? req.sessionID : req.body.sessionId; // Unique identifier
 
     let basket = basketStorage[sessionId];
     if (!basket){
@@ -183,8 +183,8 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
             orderNumber: orderNumber
         })
 
-        const order = await Order.create({firstName: req.body.firstName,
-            lastName: req.body.lastName,
+        const order = await Order.create({fullName: req.body.fullName,
+            
             orderNumber: orderNumber,
             itemIds: basket,
             totalPrice: totalPrice,

@@ -9,21 +9,15 @@ export class Order extends Model {}
 export function initOrder(sequelize : Sequelize) : void {
     Order.init({
       // Model attributes are defined here
-      firstName: {
+      fullName: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
-        },
-
         orderNumber: {
           type: DataTypes.STRING,
           allowNull: false,
           primaryKey: true
       },
-
     companyName: {
       type: DataTypes.STRING,
       allowNull: true,

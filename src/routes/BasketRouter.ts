@@ -35,23 +35,23 @@ basketRouter.use(session({ //session settings
 
 
 
-basketRouter.get("/", (req : Request, res : Response) => {
+basketRouter.get("/:sessionId?", (req : Request<{sessionId?: string}>, res : Response) => {
     // #swagger.summary = 'Get basket'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID; //Unique identifier,
+    const sessionId = req.params.sessionId === undefined ? req.sessionID : req.params.sessionId; //Unique identifier,
     const item = req.body.itemId;
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    return res.send({"basket": basket})
+    return res.send({basket, sessionId})
 })
 
 
-basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number }>, res: Response) => {
+basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number, sessionId?: string}>, res: Response) => {
     console.log("add");
-    const sessionId = req.sessionID; // Unique identifier
+    const sessionId = req.body.sessionId === undefined? req.sessionID : req.body.sessionId; // Unique identifier
     const item = req.body.itemId;
     const quantity = req.body.quantity || 1;
 

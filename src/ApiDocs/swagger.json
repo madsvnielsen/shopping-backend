@@ -103,25 +103,21 @@
         }
       }
     },
-    "/basket/": {
+    "/basket/{sessionId?}": {
       "get": {
         "tags": [
           "Basket"
         ],
         "summary": "Get basket",
         "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "sessionId?",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Basket"
         ],
-        "summary": "Delete basket",
-        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -143,6 +139,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "sessionId": {
+                  "example": "any"
+                },
                 "itemId": {
                   "example": "any"
                 },
@@ -175,6 +174,20 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/basket/": {
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Delete basket",
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"

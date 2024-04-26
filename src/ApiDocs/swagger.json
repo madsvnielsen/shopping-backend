@@ -52,9 +52,16 @@
         ],
         "summary": "List cards",
         "description": "",
+        "parameters": [
+          {
+            "name": "pagenumber",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }
@@ -72,11 +79,21 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pagenumber",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }

@@ -3,19 +3,22 @@ export const productsRouter = express.Router();
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 
-productsRouter.get("/list", (req : Request, res : Response) => {
+productsRouter.get("/list", (req : Request<{},{},{},{pagenumber:number}>, res : Response) => {
+    const {query} = req
     // #swagger.summary = 'List cards'
     // #swagger.tags = ["Products"]
-    PokemonAPI.listOfCards().then((cards: Array<Card>) => {
+    console.log(query.pagenumber)
+    PokemonAPI.listOfCards(req.query.pagenumber).then((cards: Array<Card>) => {
         console.log(cards)
         res.send(cards);
     })
 })
 
-productsRouter.get("/search/:query", (req : Request<{query : string}>, res : Response) => {
+productsRouter.get("/search/:query", (req : Request<{},{},{},{query : string, pagenumber:number}>, res : Response) => {
+    const {query} =req
     // #swagger.summary = 'Search cards from string'
     // #swagger.tags = ["Products"]
-    PokemonAPI.searchPokemonCard(req.params.query).then((cards: Array<Card>) => {console.log(cards)
+    PokemonAPI.searchPokemonCard(query.query,query.pagenumber).then((cards: Array<Card>) => {console.log(cards)
         res.send(cards);
     })
 })

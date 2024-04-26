@@ -37,10 +37,10 @@ export class PokemonAPI{
         }
     };
 
-    static async searchPokemonCard(se: string) : Promise<Array<Card>> {
+    static async searchPokemonCard(se: string, pageNumber: number) : Promise<Array<Card>> {
         try {
             const response = await fetch(
-                PokemonAPI.apiURL + '/cards?q=name:' + se+"*&page=1&pageSize=3",
+                PokemonAPI.apiURL + '/cards?q=name:' + se+`*&page=${pageNumber}&pageSize=10`,
                 {
                     method: 'GET',
                     headers: {
@@ -69,10 +69,10 @@ export class PokemonAPI{
 
         }
     }
-    static async listOfCards() : Promise<Array<Card>> {
+    static async listOfCards(pagenumber: number) : Promise<Array<Card>> {
         try {
             const response = await fetch(
-                PokemonAPI.apiURL + '/cards?page=1&pageSize=27',
+                PokemonAPI.apiURL + `/cards?page=${pagenumber}&pageSize=10`,
                 {
                     method: 'GET',
                     headers: {

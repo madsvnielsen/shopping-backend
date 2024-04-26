@@ -1,16 +1,28 @@
 import express, { Express, Request, Response } from "express";
 import session from "express-session";
 import {Order} from "../Models/DataModels/OrderModel";
+import {Address} from "../Models/DataModels/AddressModel";
 import {PokemonAPI} from "../PokemonAPI/PokemonCards";
 import {Card} from "../Models/CardModel";
 import crypto from "crypto"
+import { sendOrderConfirmationMail } from "../mailgun/MailgunApi";
+import {Payment, PaymentMethod} from "../Models/DataModels/PaymentModel";
+import {NUMBER} from "sequelize";
+
 
 export const basketRouter = express.Router();
 export const sessionManager = express();
 
 
 
-const basketStorage : {[key: string]: any[]} = {};
+const basketStorage: { [key: string]: BasketItem[] } = {};
+
+interface BasketItem {
+    id: string;
+    quantity: number;
+    card: Card;
+    isLaminated: boolean;
+}
 
 basketRouter.use(express.json());
 basketRouter.use(express.urlencoded({extended: false}));
@@ -24,50 +36,69 @@ basketRouter.use(session({ //session settings
 
 
 
-basketRouter.get("/", (req : Request, res : Response) => {
+basketRouter.get("/:sessionId?", (req : Request<{sessionId?: string}>, res : Response) => {
     // #swagger.summary = 'Get basket'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID; //Unique identifier,
+    const sessionId = req.params.sessionId === undefined ? req.sessionID : req.params.sessionId; //Unique identifier,
     const item = req.body.itemId;
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
         basketStorage[sessionId] = basket;
     }
-    return res.send({"basket": basket})
+    return res.send({basket, sessionId})
 })
 
-basketRouter.post("/add", (req : Request<{itemId : string}>, res : Response) => {
+
+basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: number, sessionId?: string}>, res: Response) => {
     console.log("add");
-    const sessionId = req.sessionID; //Unique identifier,
+    const sessionId = req.body.sessionId === undefined? req.sessionID : req.body.sessionId; // Unique identifier
     const item = req.body.itemId;
+    const quantity = req.body.quantity || 1;
+
     console.log(sessionId);
+
     // #swagger.summary = 'Add item to basket'
     // #swagger.tags = ["Basket"]
-    let basket = basketStorage[sessionId];
-    if (!basket){
-        basket = [];
+
+    try {
+        let basket = basketStorage[sessionId];
+
+        if (!basket) {
+            basket = [];
+            basketStorage[sessionId] = basket;
+        }
+
+        const existingItem = basket.find(existing => existing.id === item);
+        const index = basket.findIndex(existing => existing.id === item)
+
+
+        if (existingItem) {
+            const quan: number = Number(existingItem.quantity) + Number(quantity);
+
+            basket[index].quantity = quan;
+        } else {
+            const pokemonCard = await PokemonAPI.getPokemonCard(item);
+            basket.push({id: item, quantity: Number(quantity), card: pokemonCard, isLaminated: false});
+        }
+
         basketStorage[sessionId] = basket;
-    }
-    PokemonAPI.getPokemonCard(item).then((result : Card) => {
-        console.log("no failure")
-        basket.push(item)
-        return res.send({sessionId, basket})
-    }).catch((e) => {
-        const error = "fatalError"
+
+        return res.send({ sessionId, basket });
+    } catch (e) {
+        console.error(e);
+        const error = "fatalError";
         res.statusCode = 404;
         return res.send("fatal backend error");
-    })
-    console.log(basket);
-    // TODO:
-})
+    }
+});
 
 
 
-basketRouter.delete("/:item_id", (req, res : Response) => {
+basketRouter.delete("/:sessionId/:item_id", (req, res : Response) => {
     // #swagger.summary = 'Remove item from basket'
     // #swagger.tags = ["Basket"]
-    const sessionId = req.sessionID;
+    const sessionId = req.params.sessionId;
     console.log(sessionId);
     let basket = basketStorage[sessionId];
     if(!basket){
@@ -76,7 +107,7 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     }
 
     for(let i = 0; i < basket.length; i++){
-        if (basket[i] == req.params.item_id){
+        if (basket[i].id == req.params.item_id){
             let itemToRemove = i;
             basket = basket.filter((e, j) => j !== itemToRemove)
             basketStorage[sessionId] = basket;
@@ -87,8 +118,10 @@ basketRouter.delete("/:item_id", (req, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.delete("/", (req : Request, res : Response) => {
-    let sessionId = req.sessionID;
+
+basketRouter.delete("/:sessionId/", (req : Request, res : Response) => {
+    let sessionId = req.params.sessionId;
+
     let basket = basketStorage[sessionId];
     basket = [];
     basketStorage[sessionId] = basket;
@@ -103,12 +136,23 @@ basketRouter.delete("/", (req : Request, res : Response) => {
     return res.send(basket)
 })
 
-basketRouter.post("/order", (req : Request<{firstName : string, lastName : string}>, res : Response) => {
+interface OrderRequestBody {
+    fullName: string;
+    companyName: string;
+    phoneNumber: number;
+    email: string;
+    streetName: string;
+    city: string;
+    zipcode: number;
+    paymentMethod: PaymentMethod;
+    sessionId : string;
+
+}
+basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) => {
     // #swagger.summary = 'Place order'
     // #swagger.tags = ["Basket"]
-    // TODO:
-    const sessionId = req.sessionID
-    const orderNumber = crypto.randomUUID();
+    const sessionId = req.body.sessionId === undefined? req.sessionID : req.body.sessionId; // Unique identifier
+
     let basket = basketStorage[sessionId];
     if (!basket){
         basket = [];
@@ -119,30 +163,47 @@ basketRouter.post("/order", (req : Request<{firstName : string, lastName : strin
         return res.send("Basket is empty!")
     }
 
-        PokemonAPI.getPokemonCardsFromIds(basket as Array<string>).then((cards : Array<Card>) => {
+    PokemonAPI.getPokemonCardsFromIds(basket.map(val => val.id)).then(async (cards : Array<Card>) => {
 
         let totalPrice = 0;
         cards.forEach((card : Card) => {
             totalPrice += card.cardmarket.prices.averageSellPrice
 
         })
+        const orderNumber = crypto.randomUUID();
 
-        Order.create({firstName: req.body.firstName,
-            lastName: req.body.lastName,
+        const payment = await Payment.create({
+            paymentMethod : req.body.paymentMethod
+        })
+
+        const address = await Address.create({
+            streetName: req.body.streetName,
+            city: req.body.city,
+            zipCode: req.body.zipCode,
+            orderNumber: orderNumber
+        })
+
+        const order = await Order.create({fullName: req.body.fullName,
+            
             orderNumber: orderNumber,
             itemIds: basket,
-            totalPrice: totalPrice
-        });
+            totalPrice: totalPrice,
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
+            deliveryAddress: address.dataValues.id,
+            billingAddress: address.dataValues.id,
+            payment: payment.dataValues.id
+        })
+
+        sendOrderConfirmationMail(order, cards, address, address)
 
 
         basketStorage[sessionId] = []
+        return res.send({"Order": orderNumber})
 
     })
 
 
-
-
-    return res.send({"Order": orderNumber})
 })
 
 basketRouter.get("/order/receipt/:ordernumber", async (req: Request<{ ordernumber: string }>, res: Response) => {

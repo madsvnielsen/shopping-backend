@@ -19,7 +19,7 @@ export class PokemonAPI{
 
             );
             const json = await response.json();
-            console.log(json);
+            //console.log(json);
             if(!response.ok){
                 if(response.status === 404){
                     throw new Error ("card not found");
@@ -51,7 +51,7 @@ export class PokemonAPI{
                 }
             );
             const json = await response.json();
-            console.log(json);
+            //console.log(json);
             if(!response.ok){
                 if(response.status === 404){
                     throw new Error ("card not found");
@@ -84,7 +84,7 @@ export class PokemonAPI{
                 }
             );
             const json = await response.json();
-            console.log(json);
+            //console.log(json);
             if(!response.ok){
                 if(response.status === 404){
                     throw new Error ("card not found");

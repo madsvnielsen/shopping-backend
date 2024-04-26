@@ -35,6 +35,16 @@
         }
       }
     },
+    "/testMail/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/list": {
       "get": {
         "tags": [
@@ -93,25 +103,21 @@
         }
       }
     },
-    "/basket/": {
+    "/basket/{sessionId?}": {
       "get": {
         "tags": [
           "Basket"
         ],
         "summary": "Get basket",
         "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "sessionId?",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Basket"
         ],
-        "summary": "Delete basket",
-        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -133,7 +139,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "sessionId": {
+                  "example": "any"
+                },
                 "itemId": {
+                  "example": "any"
+                },
+                "quantity": {
                   "example": "any"
                 }
               }
@@ -147,7 +159,7 @@
         }
       }
     },
-    "/basket/{item_id}": {
+    "/basket/{sessionId}/{item_id}": {
       "delete": {
         "tags": [
           "Basket"
@@ -156,7 +168,35 @@
         "description": "",
         "parameters": [
           {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "item_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/basket/{sessionId}/": {
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Delete basket",
+        "description": "",
+        "parameters": [
+          {
+            "name": "sessionId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -183,10 +223,28 @@
             "schema": {
               "type": "object",
               "properties": {
+                "paymentMethod": {
+                  "example": "any"
+                },
+                "streetName": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "zipCode": {
+                  "example": "any"
+                },
                 "firstName": {
                   "example": "any"
                 },
                 "lastName": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "email": {
                   "example": "any"
                 }
               }

@@ -11,6 +11,7 @@ A backend for a shopping website
 * Apache web server
 
 
+Hosted here http://dtu62597.eduhost.dk:10261/api/docs/
 
 ## How to run
 

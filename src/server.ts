@@ -7,11 +7,11 @@ import cors from "cors"
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
+import { start } from "repl";
 
 
 export const app : Express = express();
-app.use(cors())
-ShoppingDb.initialize();
+
 
 
 
@@ -19,7 +19,8 @@ ShoppingDb.initialize();
 
 //export const server = app.listen(3000, () => console.log('Shopping backend is listening on port 3000.'));
 
-
+app.use(cors())
+ShoppingDb.initialize();
 app.use("/", baseRouter)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get("/dbtest", (req : Request, res : Response) => {
@@ -28,7 +29,7 @@ app.get("/dbtest", (req : Request, res : Response) => {
     // #swagger.tags = ["Test"]
     // #swagger.description = 'Shows if the db is authentication'
     ShoppingDb.sequelize.authenticate().then(() => {
-          res.send('Connection has been established successfully.')
+        res.send('Connection has been established successfully.')
     }).catch((error: Error) => {
         res.send('Unable to connect to the database: ' + error);
     })
@@ -37,3 +38,6 @@ app.get("/dbtest", (req : Request, res : Response) => {
 
 var httpServer = http.createServer(app);
 httpServer.listen(3000);
+
+
+

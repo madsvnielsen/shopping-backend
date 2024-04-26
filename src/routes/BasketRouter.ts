@@ -75,11 +75,19 @@ basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: numbe
 
         if (existingItem) {
             const quan: number = Number(existingItem.quantity) + Number(quantity);
+            if(quan == null){
+                return res.send({"Error" : "invalid value for quantity"})
+            }
 
             basket[index].quantity = quan;
         } else {
-            const pokemonCard = await PokemonAPI.getPokemonCard(item);
-            basket.push({id: item, quantity: Number(quantity), card: pokemonCard, isLaminated: false});
+            try{
+                const pokemonCard = await PokemonAPI.getPokemonCard(item);
+                basket.push({id: item, quantity: Number(quantity), card: pokemonCard, isLaminated: false});
+            } catch (e) {
+                return res.send({"Error" : e})
+            }
+            
         }
 
         basketStorage[sessionId] = basket;
@@ -171,6 +179,12 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
 
         })
         const orderNumber = crypto.randomUUID();
+        
+        if(!Object.values(PaymentMethod).includes(req.body.paymentMethod)){
+            res.send({"Error" : "Invalid payment method " + req.body.paymentMethod})
+            return
+        }
+            
 
         const payment = await Payment.create({
             paymentMethod : req.body.paymentMethod
@@ -201,7 +215,7 @@ basketRouter.post("/order", (req : Request<OrderRequestBody>, res : Response) =>
         basketStorage[sessionId] = []
         return res.send({"Order": orderNumber})
 
-    })
+    }).catch(e => res.send({"Error" : e}))
 
 
 })

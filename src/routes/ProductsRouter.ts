@@ -10,7 +10,7 @@ productsRouter.get("/list", (req: Request, res: Response) => {
     PokemonAPI.listOfCards().then((cards: Array<Card>) => {
         // console.log(cards)
         res.send(cards);
-    })
+    }).catch(e => res.send({"Error" : e}))
 })
 
 productsRouter.get("/search/:query", (req: Request<{ query: string }>, res: Response) => {
@@ -18,7 +18,7 @@ productsRouter.get("/search/:query", (req: Request<{ query: string }>, res: Resp
     // #swagger.tags = ["Products"]
     PokemonAPI.searchPokemonCard(req.params.query).then((cards: Array<Card>) => {
         res.send(cards);
-    })
+    }).catch(e => res.send({"Error" : e}))
 })
 
 productsRouter.get("/:id", (req: Request<{ id: string }>, res: Response) => {
@@ -26,5 +26,5 @@ productsRouter.get("/:id", (req: Request<{ id: string }>, res: Response) => {
     // #swagger.tags = ["Products"]
     PokemonAPI.getPokemonCard(req.params.id).then((result: Card) => {
         res.send(result);
-    })
+    }).catch(e => res.send({"Error" : e}))
 })

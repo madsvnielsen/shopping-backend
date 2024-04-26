@@ -223,6 +223,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "sessionId": {
+                  "example": "any"
+                },
                 "paymentMethod": {
                   "example": "any"
                 },
@@ -235,10 +238,7 @@
                 "zipCode": {
                   "example": "any"
                 },
-                "firstName": {
-                  "example": "any"
-                },
-                "lastName": {
+                "fullName": {
                   "example": "any"
                 },
                 "phoneNumber": {

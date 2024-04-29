@@ -26,14 +26,14 @@ export class PokemonAPI{
                 }else if(response.status === 429){
                     throw new Error ("Rate exceeded")
                 }else{
-                    throw new Error ("Fatal error");
+                    throw new Error ("Fatal error " + response.body);
                 }
             }
             console.log("no errors present")
             return json.data as Card
         } catch (error) {
-            console.log("fatal error")
-            return Promise.reject("Couldn't get Card")
+            console.log("fatal error: " + error)
+            return Promise.reject("Couldn't get Card: " + error)
         }
     };
 
@@ -59,13 +59,13 @@ export class PokemonAPI{
                     throw new Error ("Rate exceeded")
                 }
                 else{
-                    throw new Error ("Fatal error");
+                    throw new Error ("Fatal error: " + response.body);
                 }
             }
             return json.data
         } catch (error) {
             console.log("error")
-            return Promise.reject("Couldn't get Card")
+            return Promise.reject("Couldn't get Card: " + error)
 
         }
     }
@@ -92,12 +92,12 @@ export class PokemonAPI{
                     throw new Error ("Rate exceeded")
                 }
                 else{
-                    throw new Error ("Fatal error");
+                    throw new Error ("Fatal error" + response.body);
                 }
             }
             return json.data
         } catch (error) {
-            return Promise.reject("Couldn't get Card")
+            return Promise.reject("Couldn't get Card " + error)
 
         }
     }
@@ -112,7 +112,7 @@ export class PokemonAPI{
              }
             return result
         } catch (error) {
-            return Promise.reject("Couldn't get Cards")
+            return Promise.reject("Couldn't get Cards " + error)
 
         }
 

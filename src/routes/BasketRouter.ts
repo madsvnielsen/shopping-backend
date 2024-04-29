@@ -97,7 +97,7 @@ basketRouter.post("/add", async (req: Request<{ itemId: string, quantity?: numbe
         console.error(e);
         const error = "fatalError";
         res.statusCode = 404;
-        return res.send("fatal backend error");
+        return res.send("fatal backend error" + e);
     }
 });
 
